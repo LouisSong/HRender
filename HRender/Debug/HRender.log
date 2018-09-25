@@ -1,0 +1,6 @@
+﻿  HRender.cpp
+d:\louis\cpp\hrender\hrender\hrender.cpp(151): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+d:\louis\cpp\hrender\hrender\hrender.cpp(154): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\louis\cpp\hrender\hrender\hrender.cpp(198): warning C4554: '&': check operator precedence for possible error; use parentheses to clarify precedence
+  HRender.vcxproj -> D:\louis\cpp\HRender\Debug\HRender.exe
+  HRender.vcxproj -> D:\louis\cpp\HRender\Debug\HRender.pdb (Full PDB)
