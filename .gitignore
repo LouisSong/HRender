@@ -33,3 +33,5 @@
 *.app
 /HRender.VC.db
 /.vs
+/Debug
+/ipch
