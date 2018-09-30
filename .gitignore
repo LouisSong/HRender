@@ -37,3 +37,8 @@
 /ipch
 /HRender/*.aps
 /*.gitattributes
+/HRender/Debug/*.log
+/HRender/Debug/HRender.tlog/*.tlog
+/HRender/Debug/HRender.tlog/*.lastbuildstate
+/HRender/Debug/*.idb
+/HRender/Debug/*.pdb
