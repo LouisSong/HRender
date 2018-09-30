@@ -35,3 +35,5 @@
 /.vs
 /Debug
 /ipch
+/HRender/*.aps
+/*.gitattributes

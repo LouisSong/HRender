@@ -2,10 +2,14 @@
 //
 
 #include "stdafx.h"
+
+#define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 #include <math.h>
+#include "Shader.h"
+#include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -14,23 +18,6 @@ void processInput(GLFWwindow *window);
 
 const unsigned int SCR_WIDTH = 1024;
 const unsigned int SCR_HEIGHT = 512;
-
-const char *vertexShaderSource =
-	"#version 330 core\n"
-	"layout (location = 0) in vec3 aPos;\n"
-	"void main()\n"
-	"{\n"
-	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-	"}\0";
-
-const char *fragmentShaderSource =
-"#version 330 core\n"
-"out vec4 FragColor22;\n"
-"uniform vec4 ourColor;\n"
-	"void main()\n"
-	"{\n"
-	"   FragColor22 = ourColor;\n"
-	"}\n\0";
 
 int main()
 {
@@ -57,63 +44,13 @@ int main()
 		return -1;
 	}
 
-#pragma region VERTEX_SHADER
-	
-
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "vertext shader compilation failed\n" << infoLog << std::endl;
-	}
-#pragma endregion
-
-#pragma region FRAGMENT_SHADER
-	
-
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "fragment shader compilation failed\n" << infoLog << std::endl;
-	}
-#pragma endregion
-
-#pragma region SHADER_PROGRAM
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "link shader program failed\n" << infoLog << std::endl;
-	}
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-#pragma endregion
+	Shader simpleShader("s.vs","s.fs");
 
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  // top right
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
+		0.5f,  0.5f, 0.0f,  1.0f,0.0f,0.0f,1,1,// top right
+		0.5f, -0.5f, 0.0f,  1.0f,1.0f,1.0f,1,0,// bottom right
+		-0.5f, -0.5f, 0.0f,  1.0f,0.0f,0.0f,0,0,// bottom left
+		-0.5f,  0.5f, 0.0f,   0.0f,0.0f,0.0f,0,1// top left 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
@@ -136,11 +73,42 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3*sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+#pragma region loadTexture
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
+
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "load texture failed!" << std::endl;
+	}
+	stbi_image_free(data);
+#pragma endregion
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -148,15 +116,17 @@ int main()
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
-		glClearColor(0.1, 0.25, 0.25, 0.0f);
+		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		float timeValue = glfwGetTime();
+		float timeValue = (float)glfwGetTime();
 		float greenValue = ((sin(timeValue)) / 2.0f) + 0.5f;
-		int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-		glUseProgram(shaderProgram);
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		greenValue = 1;
+		simpleShader.use();
+		simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
 		glBindVertexArray(VAO);
+
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
@@ -195,7 +165,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_M && action == GLFW_RELEASE)
 	{
 		drawMode++;
-		if (drawMode & 1 == 1)
+		if ((drawMode & 1) == 1)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//绘填充模式
