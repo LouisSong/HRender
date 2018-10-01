@@ -16,10 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
-    <Text Include="s.vs">
+    <Text Include="simple.fs">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="s.fs">
+    <Text Include="simple.vs">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
@@ -62,6 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="headicon.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

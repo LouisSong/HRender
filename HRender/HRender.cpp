@@ -11,6 +11,7 @@
 #include "Shader.h"
 #include "stb_image.h"
 
+unsigned int loadTexture(const GLchar* texturePath, GLint internalFormat, GLint format);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 int main();
@@ -44,13 +45,18 @@ int main()
 		return -1;
 	}
 
-	Shader simpleShader("s.vs","s.fs");
+	Shader simpleShader("simple.vs","simple.fs");
+
+	stbi_set_flip_vertically_on_load(true);
+	unsigned int texture = loadTexture("container.jpg", GL_RGB, GL_RGB);
+	unsigned int texture2 = loadTexture("headicon.png",GL_RGBA,GL_RGBA);
+	
 
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  1.0f,0.0f,0.0f,1,1,// top right
-		0.5f, -0.5f, 0.0f,  1.0f,1.0f,1.0f,1,0,// bottom right
-		-0.5f, -0.5f, 0.0f,  1.0f,0.0f,0.0f,0,0,// bottom left
-		-0.5f,  0.5f, 0.0f,   0.0f,0.0f,0.0f,0,1// top left 
+		0.5f,  0.5f, 0.0f,  1.0f,0.0f,0.0f, 2.0f,1,// top right
+		0.5f, -0.5f, 0.0f,  0.0f,1.0f,0.0f, 2.0f,0,// bottom right
+		-0.5f, -0.5f, 0.0f,  0.0f,0.0f,1.0f, 0,0,// bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f,1.0f,1.0f, 0,1// top left 
 	};
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
@@ -85,31 +91,6 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-#pragma region loadTexture
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
-
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "load texture failed!" << std::endl;
-	}
-	stbi_image_free(data);
-#pragma endregion
-
-
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -126,7 +107,14 @@ int main()
 		simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
 		glBindVertexArray(VAO);
 
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+
+		simpleShader.setInt("texture1", 0);
+		simpleShader.setInt("texture2", 1);
 
 		glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
 
@@ -172,4 +160,32 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
+#pragma region loadTexture
+unsigned int loadTexture(const GLchar* texturePath,GLint internalFormat,GLint format)
+{
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0.5, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "load texture failed!" << std::endl;
+	}
+	stbi_image_free(data);
+
+	return texture;
+}
+#pragma endregion
 
