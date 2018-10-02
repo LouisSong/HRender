@@ -71,7 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files %28x86%29\GLFW\include;D:\louis\openglsetup\lib\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\GLFW\include;D:\louis\openglsetup\lib\glad\include;D:\louis\openglsetup\lib\glm\;D:\louis\openglsetup\lib\glm\gtc;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -10,6 +10,9 @@
 #include <math.h>
 #include "Shader.h"
 #include "stb_image.h"
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 unsigned int loadTexture(const GLchar* texturePath, GLint internalFormat, GLint format);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -105,6 +108,16 @@ int main()
 		greenValue = 1;
 		simpleShader.use();
 		simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
+
+		//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+		glm::mat4 trans;
+		//trans = glm::translate(trans, glm::vec3(0.25f, 0.0f, 0.0f));
+		//simpleShader.SetMatrix4("transform", glm::value_ptr(trans));
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+		//trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		simpleShader.SetMatrix4("transform", glm::value_ptr(trans));
+		
 		glBindVertexArray(VAO);
 
 		glActiveTexture(GL_TEXTURE0);
