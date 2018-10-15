@@ -56,14 +56,65 @@ int main()
 	
 
 	float vertices[] = {
-		0.5f,  0.5f, 0.0f,  1.0f,0.0f,0.0f, 2.0f,1,// top right
-		0.5f, -0.5f, 0.0f,  0.0f,1.0f,0.0f, 2.0f,0,// bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f,0.0f,1.0f, 0,0,// bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f,1.0f,1.0f, 0,1// top left 
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
+
 	unsigned int indices[] = {  // note that we start from 0!
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
+	};
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
 	unsigned int VAO;
@@ -82,14 +133,14 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3*sizeof(float)));
-	glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3*sizeof(float)));
+	//glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -97,27 +148,30 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
+		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
 		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		//glCullFace(GL_BACK);
 
 		float timeValue = (float)glfwGetTime();
 		float greenValue = ((sin(timeValue)) / 2.0f) + 0.5f;
 		greenValue = 1;
 		simpleShader.use();
-		simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
+		//simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
 
-		//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-		glm::mat4 trans;
-		//trans = glm::translate(trans, glm::vec3(0.25f, 0.0f, 0.0f));
-		//simpleShader.SetMatrix4("transform", glm::value_ptr(trans));
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-		//trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		simpleShader.SetMatrix4("transform", glm::value_ptr(trans));
 		
+		glm::mat4 view;
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		view = glm::rotate(view,(float)glfwGetTime(),/** glm::radians(-35.0f)*/ glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT),0.1f,100.0f);
+		
+		simpleShader.SetMatrix4("view", glm::value_ptr(view));
+		simpleShader.SetMatrix4("projection", glm::value_ptr(projection));
+
 		glBindVertexArray(VAO);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -129,7 +183,17 @@ int main()
 		simpleShader.setInt("texture1", 0);
 		simpleShader.setInt("texture2", 1);
 
-		glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+		for (int i = 0; i < 1; i++)
+		{
+			glm::mat4 model;
+			model = glm::translate(model, cubePositions[i%10]);
+			model = glm::rotate(model, glm::radians(i * 20.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+
+			simpleShader.SetMatrix4("model", glm::value_ptr(model));
+			//glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
