@@ -10,6 +10,7 @@
 #include <math.h>
 #include "Shader.h"
 #include "stb_image.h"
+#include "Camera.h"
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -22,6 +23,12 @@ void processInput(GLFWwindow *window);
 
 const unsigned int SCR_WIDTH = 1024;
 const unsigned int SCR_HEIGHT = 512;
+
+int drawMode = 0;
+double lastTime = 0;
+float delta = 0;
+
+Camera* camera;
 
 int main()
 {
@@ -54,6 +61,11 @@ int main()
 	unsigned int texture = loadTexture("container.jpg", GL_RGB, GL_RGB);
 	unsigned int texture2 = loadTexture("headicon.png",GL_RGBA,GL_RGBA);
 	
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	camera = new Camera(cameraPos, cameraTarget, cameraUp);
 
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -147,6 +159,10 @@ int main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		double now = glfwGetTime();
+		delta = (float)(now - lastTime);
+		lastTime = now;
+
 		processInput(window);
 		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -162,14 +178,23 @@ int main()
 		simpleShader.use();
 		//simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
 
+
+		float radius = 10.0f;
+		float camX = (float)sin(glfwGetTime()) * radius;
+		float camZ = (float)cos(glfwGetTime()) * radius;
+
+		//camera.pos.z = camX;
+		//camera.pos.x = camZ;
 		
-		glm::mat4 view;
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-		view = glm::rotate(view,(float)glfwGetTime(),/** glm::radians(-35.0f)*/ glm::vec3(1.0f, 0.0f, 0.0f));
+		camera->Update();
+
+		//glm::mat4 view;
+		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		//view = glm::rotate(view,(float)glfwGetTime(),/** glm::radians(-35.0f)*/ glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT),0.1f,100.0f);
 		
-		simpleShader.SetMatrix4("view", glm::value_ptr(view));
+		simpleShader.SetMatrix4("view", glm::value_ptr(camera->view));
 		simpleShader.SetMatrix4("projection", glm::value_ptr(projection));
 
 		glBindVertexArray(VAO);
@@ -183,7 +208,7 @@ int main()
 		simpleShader.setInt("texture1", 0);
 		simpleShader.setInt("texture2", 1);
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			glm::mat4 model;
 			model = glm::translate(model, cubePositions[i%10]);
@@ -206,17 +231,27 @@ int main()
     return 0;
 }
 
-int drawMode = 0;
-
 void processInput(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-	else if (glfwGetKey(window, GLFW_KEY_M) == GLFW_RELEASE)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		
+		camera->pos += camera->speed * delta * camera->front;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		camera->pos -= camera->speed * delta * glm::normalize(glm::cross(camera->front,camera->up));
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		camera->pos -= camera->speed * delta * camera->front;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		camera->pos += camera->speed * delta * glm::normalize(glm::cross(camera->front, camera->up));
 	}
 }
 
