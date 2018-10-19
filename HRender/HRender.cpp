@@ -18,8 +18,11 @@
 unsigned int loadTexture(const GLchar* texturePath, GLint internalFormat, GLint format);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouse_callback(GLFWwindow* window,double xpos,double ypos);
+void scroll_callback(GLFWwindow* window, double xpos, double ypos);
 int main();
 void processInput(GLFWwindow *window);
+
 
 const unsigned int SCR_WIDTH = 1024;
 const unsigned int SCR_HEIGHT = 512;
@@ -48,12 +51,16 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetCursorPosCallback(window,mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "gald failed!" << std::endl;
 		return -1;
 	}
+
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	Shader simpleShader("simple.vs","simple.fs");
 
@@ -164,6 +171,9 @@ int main()
 		lastTime = now;
 
 		processInput(window);
+		camera->UpdateVectors();
+		camera->UpdateViewMatrix();
+
 		glEnable(GL_DEPTH_TEST);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
@@ -178,21 +188,11 @@ int main()
 		simpleShader.use();
 		//simpleShader.SetVector4("uColor", 1, greenValue,1, 1.0f);
 
-
-		float radius = 10.0f;
-		float camX = (float)sin(glfwGetTime()) * radius;
-		float camZ = (float)cos(glfwGetTime()) * radius;
-
-		//camera.pos.z = camX;
-		//camera.pos.x = camZ;
-		
-		camera->Update();
-
 		//glm::mat4 view;
 		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		//view = glm::rotate(view,(float)glfwGetTime(),/** glm::radians(-35.0f)*/ glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH/SCR_HEIGHT),0.1f,100.0f);
+		projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH/SCR_HEIGHT),0.1f,100.0f);
 		
 		simpleShader.SetMatrix4("view", glm::value_ptr(camera->view));
 		simpleShader.SetMatrix4("projection", glm::value_ptr(projection));
@@ -239,19 +239,19 @@ void processInput(GLFWwindow *window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camera->pos += camera->speed * delta * camera->front;
+		camera->Move(FORWARD, delta);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camera->pos -= camera->speed * delta * glm::normalize(glm::cross(camera->front,camera->up));
+		camera->Move(LEFT, delta);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera->pos -= camera->speed * delta * camera->front;
+		camera->Move(BACKWARD, delta);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camera->pos += camera->speed * delta * glm::normalize(glm::cross(camera->front, camera->up));
+		camera->Move(RIGHT, delta);
 	}
 }
 
@@ -272,6 +272,31 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
+double lastX, lastY;
+bool isFirstMouseIn = true;
+void mouse_callback(GLFWwindow * window, double xpos, double ypos)
+{
+	if (isFirstMouseIn)
+	{
+		isFirstMouseIn = false;
+		lastX = SCR_WIDTH >> 1;
+		lastY = SCR_HEIGHT >> 1;
+		camera->yaw = -90;
+	}
+
+	float xoffset = (float)(xpos - lastX);
+	float yoffset = (float)(ypos - lastY);
+	lastX = xpos;
+	lastY = ypos;
+
+	camera->MouseMove(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow * window, double xoffset, double yoffset)
+{
+	camera->Zoom((float)yoffset);
+}
+
 #pragma region loadTexture
 unsigned int loadTexture(const GLchar* texturePath,GLint internalFormat,GLint format)
 {
@@ -288,7 +313,7 @@ unsigned int loadTexture(const GLchar* texturePath,GLint internalFormat,GLint fo
 	unsigned char *data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0.5, format, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0.5f, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
