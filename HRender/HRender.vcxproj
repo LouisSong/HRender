@@ -178,6 +178,12 @@
     <Image Include="container.jpg" />
     <Image Include="headicon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Light.fs" />
+    <None Include="Light.vs" />
+    <None Include="LampShader.fs" />
+    <None Include="LampShader.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
