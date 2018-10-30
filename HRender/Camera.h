@@ -22,8 +22,14 @@ public:
 	glm::vec3 worldUp;
 	glm::mat4 view;
 
+	const float MIN_DISTANCE_FROM_PLAYER = 1.0f;
+	const float MAX_DISTANCE_FROM_PLAYER = 10.0f;
+	float distanceFromPlayer = 5.0f;
+	
+	float angleAroundPlayer = 0.0f;
+
 	float speed = 10.0f;
-	float sensitivity = 0.1f;
+	float sensitivity = 0.6f;
 	float fov_sensitivity = 3.0f;
 
 	float pitch = 0.0f;
@@ -37,7 +43,10 @@ public:
 	void Camera::Zoom(float yoffset);
 	void Camera::Move(Camera_Movement direction, float deltaTime);
 	void Camera::MouseMove(double xoffset, double yoffset, bool constrainPitch = true);
-	void Camera::UpdateVectors();
+
+	float GetHorizontalDistance();
+	float GetVerticalDistance();
+	void UpdatePosition();
 	
 	~Camera();
 

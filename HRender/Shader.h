@@ -20,6 +20,8 @@ public:
 	void setInt(const std::string &name, int value);
 	void setFloat(const std::string &name,float value);
 	void Shader::SetVector3(const std::string &name, float x, float y, float z);
+	void Shader::SetVector3(const std::string &name, glm::vec3 value);
+
 	void Shader::SetVector4(const std::string &name, float x, float y, float z, float w);
 	void Shader::SetMatrix3(const std::string &name, const glm::mat3 matrix);
 	void Shader::SetMatrix4(const std::string &name, const glm::mat4 matrix);

@@ -11,6 +11,8 @@
 #include "Shader.h"
 #include "stb_image.h"
 #include "Camera.h"
+#include "PointLight.h"
+#include <vector>
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -19,6 +21,7 @@ unsigned int loadTexture(const GLchar* texturePath, GLint internalFormat, GLint 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow* window,double xpos,double ypos);
+void mouse_button_callback(GLFWwindow * window, int button, int action, int mods);
 void scroll_callback(GLFWwindow* window, double xpos, double ypos);
 int main();
 void processInput(GLFWwindow *window);
@@ -53,6 +56,7 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window,mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -70,11 +74,58 @@ int main()
 	unsigned int specularMap = loadTexture("container2_specular.png", GL_RGBA, GL_RGBA);
 	unsigned int texture2 = loadTexture("headicon.png",GL_RGBA,GL_RGBA);
 	
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 6.0f);
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+
 	camera = new Camera(cameraPos, cameraTarget, cameraUp);
+
+	std::vector<PointLight*> pointLights;
+	for (int i = 0; i < 4; i++)
+	{
+		pointLights.push_back(new PointLight());
+	}
+
+	//pointLight 0
+	PointLight* pointLight = pointLights[0];
+	pointLight->position = glm::vec3(2, 0, 0);
+	pointLight->constant = 1.0f;
+	pointLight->linear = 0.09f;
+	pointLight->quadratic = 0.032f;
+	pointLight->ambient = glm::vec3(0.3, 0.3, 0.3);
+	pointLight->diffuse = glm::vec3(0, 1, 0);
+	pointLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	//pointLight 1
+	pointLight = pointLights[1];
+	pointLight->position = glm::vec3(0, 0, -2);
+	pointLight->constant = 1.0f;
+	pointLight->linear = 0.09f;
+	pointLight->quadratic = 0.032f;
+	pointLight->ambient = glm::vec3(0.3, 0.3, 0.3);
+	pointLight->diffuse = glm::vec3(1, 0, 0);
+	pointLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	//pointLight 2
+	pointLight = pointLights[2];
+	pointLight->position = glm::vec3(0, 0, 2);
+	pointLight->constant = 1.0f;
+	pointLight->linear = 0.09f;
+	pointLight->quadratic = 0.032f;
+	pointLight->ambient = glm::vec3(0.3, 0.3, 0.3);
+	pointLight->diffuse = glm::vec3(0, 0, 1);
+	pointLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	//pointLight 3
+	pointLight = pointLights[3];
+	pointLight->position = glm::vec3(-2, 0, 0);
+	pointLight->constant = 1.0f;
+	pointLight->linear = 0.09f;
+	pointLight->quadratic = 0.032f;
+	pointLight->ambient = glm::vec3(0.3, 0.3, 0.3);
+	pointLight->diffuse = glm::vec3(1, 1, 0);
+	pointLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
 	float vertices[] = {
 		// positions          // normals           // texture coords
@@ -199,7 +250,8 @@ int main()
 		lastTime = now;
 
 		processInput(window);
-		camera->UpdateVectors();
+		//camera->UpdateVectors();
+		camera->UpdatePosition();
 		camera->UpdateViewMatrix();
 
 		glEnable(GL_DEPTH_TEST);
@@ -212,7 +264,10 @@ int main()
 		//glCullFace(GL_BACK);
 
 		//========================= 绘制灯光物件 ===========================
-		glm::vec3 lightPos(1.2f, 0.3f, 4.0f);
+
+		//dirLight
+
+		glm::vec3 lightPos(0.0f, 2.0f, 0.0f);
 		//glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 
 		glm::mat4 model;
@@ -232,6 +287,17 @@ int main()
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		//pointLights
+
+		for (int i = 0; i < 4; i++)
+		{
+			glm::mat4 model;
+			model = glm::translate(model, (*pointLights[i]).position);
+			model = glm::scale(model, glm::vec3(0.2f));
+			lampShader.SetMatrix4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
 		//========================== 绘制方块 =====================================
 
 		lightShader.use();
@@ -245,7 +311,12 @@ int main()
 		lightShader.SetVector3("light.specular", 1.0f, 1.0f, 1.0f);
 		lightShader.SetVector3("light.position", lightPos.x, lightPos.y, lightPos.z);
 
-		lightShader.SetVector3("viewPos", camera->pos.x, camera->pos.y, camera->pos.z);
+		lightShader.SetVector3("viewPos", camera->pos);
+
+		for (int i = 0; i < 4; i++)
+		{
+			(*pointLights[i]).Prepare(&lightShader, i);
+		}
 		
 		model = glm::mat4();
 		//model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -333,27 +404,52 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 double lastX, lastY;
 bool isFirstMouseIn = true;
+bool isPressedMouseButton = false;
+
 void mouse_callback(GLFWwindow * window, double xpos, double ypos)
 {
-	if (isFirstMouseIn)
+
+	if (isPressedMouseButton == false)
 	{
-		isFirstMouseIn = false;
-		lastX = SCR_WIDTH >> 1;
-		lastY = SCR_HEIGHT >> 1;
-		camera->yaw = -90;
+		lastX = xpos;
+		lastY = ypos;
 	}
+	else
+	{
+		if (isFirstMouseIn)
+		{
+			isFirstMouseIn = false;
+			lastX = xpos;//SCR_WIDTH >> 1;
+			lastY = ypos;//SCR_HEIGHT >> 1;
+			//camera->yaw = -90;
+		}
 
-	float xoffset = (float)(xpos - lastX);
-	float yoffset = (float)(ypos - lastY);
-	lastX = xpos;
-	lastY = ypos;
-
-	camera->MouseMove(xoffset, yoffset);
+		float xoffset = (float)(xpos - lastX);
+		float yoffset = (float)(ypos - lastY);
+		lastX = xpos;
+		lastY = ypos;
+		std::cout << "位移：" << xoffset << "," << yoffset << std::endl;
+		camera->MouseMove(xoffset, yoffset);
+	}
+	
 }
 
 void scroll_callback(GLFWwindow * window, double xoffset, double yoffset)
 {
 	camera->Zoom((float)yoffset);
+}
+
+void mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
+{
+	if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+
+		isPressedMouseButton = true;
+	}
+	else if(action == GLFW_RELEASE && button == GLFW_MOUSE_BUTTON_LEFT)
+	{
+		isPressedMouseButton = false;
+	}
 }
 
 #pragma region loadTexture

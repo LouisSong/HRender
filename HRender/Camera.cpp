@@ -1,44 +1,42 @@
 #include "stdafx.h"
 #include "Camera.h"
 #include<gtc\matrix_transform.hpp>
+#include <iostream>
 
 Camera::Camera(glm::vec3 pos,glm::vec3 target, glm::vec3 up)
 {
 	this->pos = pos;
 	this->target = target;
-	this->front = target;
 	this->worldUp = up;
 	this->fov = 45.0f;
-	this->UpdateVectors();
 }
 
 void Camera::UpdateViewMatrix()
 {
-	view = glm::lookAt(pos, pos + front, up);
+	view = glm::lookAt(pos, target, worldUp);
 }
 
 void Camera::Move(Camera_Movement direction,float deltaTime)
 {
-	float velocity = speed * deltaTime;
-	switch (direction)
-	{
-		case FORWARD:
-			pos += front * velocity;
-			break;
-		case BACKWARD:
-			pos -= front * velocity;
-			break;
-		case LEFT:
-			pos -= right * velocity;
-			break;
-		case RIGHT:
-			pos += right * velocity;
-			break;
-		default:
-			break;
-	}
-
-	UpdateVectors();
+//	float velocity = speed * deltaTime;
+//	switch (direction)
+//	{
+//		case FORWARD:
+//			//pos += front * velocity;
+//			target.z += velocity;
+//			break;
+//		case BACKWARD:
+//			target.z -= velocity;
+//			break;
+//		case LEFT:
+//			target.x += velocity;
+//			break;
+//		case RIGHT:
+//			target.x -= velocity;
+//			break;
+//		default:
+//			break;
+//	}
 }
 
 void Camera::MouseMove(double xoffset, double yoffset,bool constrainPitch)
@@ -47,8 +45,7 @@ void Camera::MouseMove(double xoffset, double yoffset,bool constrainPitch)
 	yoffset *= sensitivity;
 
 	pitch += (float)yoffset;
-	yaw += (float)xoffset;
-
+	
 	if (constrainPitch)
 	{
 		if (pitch > 89.0f)
@@ -56,27 +53,44 @@ void Camera::MouseMove(double xoffset, double yoffset,bool constrainPitch)
 		else if (pitch < -89.0f)
 			pitch = -89.0f;
 	}
+
+	float angleChange = (float)xoffset * sensitivity;
+	angleAroundPlayer -= angleChange;
+
+	yaw = 180 - angleAroundPlayer;
 }
 
 void Camera::Zoom(float yoffset)
 {
-	this->fov += yoffset * fov_sensitivity;
-	if (this->fov > 45.0f)
-		this->fov = 45.0f;
-	else if (this->fov < 1.0f)
-		this->fov = 1.0f;
+	this->distanceFromPlayer -= yoffset;
+	if (distanceFromPlayer < MIN_DISTANCE_FROM_PLAYER)
+		distanceFromPlayer = MIN_DISTANCE_FROM_PLAYER;
+	else if (distanceFromPlayer > MAX_DISTANCE_FROM_PLAYER)
+		distanceFromPlayer = MAX_DISTANCE_FROM_PLAYER;
 }
 
-void Camera::UpdateVectors()
+void Camera::UpdatePosition()
 {
-	glm::vec3 _front;
-	_front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
-	_front.y = sin(glm::radians(pitch));
-	_front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	float horizontalDistance = GetHorizontalDistance();
+	float verticalDistance = GetVerticalDistance();
 
-	front = glm::normalize(_front);
-	right = glm::cross(front,worldUp);
-	up = glm::cross(right, front);
+	float angle = angleAroundPlayer;
+	float offsetX = horizontalDistance * glm::sin(glm::radians(angle));
+	float offsetZ = horizontalDistance * glm::cos(glm::radians(angle));
+
+	pos.x = target.x - offsetX;
+	pos.y = verticalDistance;
+	pos.z = target.z - offsetZ;
+}
+
+float Camera::GetHorizontalDistance()
+{
+	return distanceFromPlayer * glm::cos(glm::radians(pitch));
+}
+
+float Camera::GetVerticalDistance()
+{
+	return distanceFromPlayer * glm::sin(glm::radians(pitch));
 }
 
 Camera::~Camera()
