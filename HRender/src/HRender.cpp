@@ -233,7 +233,7 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	Model yuqiang("huanglong.fbx");
+	Model yuqiang("nanosuit/nanosuit.xyz");
 
 	while (!glfwWindowShouldClose(window))
 	{
