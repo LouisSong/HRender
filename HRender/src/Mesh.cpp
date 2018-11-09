@@ -65,7 +65,7 @@ void Mesh::Draw(Shader shader)
 		else if (type == Height)
 			number = heightNr++;
 
-		shader.setInt("material." + TextureTypeToString(type) + std::to_string(number), 0);
+		shader.setInt("material." + TextureTypeToString(type) + std::to_string(number), i);
 		//glBindBuffer(GL_TEXTURE_2D, 1);// ;
 	}
 

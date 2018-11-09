@@ -50,6 +50,12 @@
     <None Include="Light.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Depth.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Depth.fs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">

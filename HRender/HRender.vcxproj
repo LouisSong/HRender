@@ -160,6 +160,8 @@
     <Image Include="headicon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Depth.fs" />
+    <None Include="Depth.vs" />
     <None Include="Light.fs" />
     <None Include="Light.vs" />
     <None Include="LampShader.fs" />
