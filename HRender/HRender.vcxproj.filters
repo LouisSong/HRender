@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{2fd0c510-1b38-4c50-8178-d88c1c7a3935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{e3dcfede-5a68-4876-b57d-63355bbcac2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -36,6 +42,12 @@
     <Image Include="container2_specular.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resource\Textures\marble.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\metal.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="LampShader.fs">
@@ -44,11 +56,11 @@
     <None Include="LampShader.vs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Light.fs">
-      <Filter>Resource Files</Filter>
+    <None Include="Resource\Shaders\Depth.fs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Light.vs">
-      <Filter>Resource Files</Filter>
+    <None Include="Resource\Shaders\Depth.vs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
