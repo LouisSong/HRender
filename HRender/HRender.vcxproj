@@ -158,14 +158,14 @@
     <Image Include="container2.png" />
     <Image Include="container2_specular.png" />
     <Image Include="headicon.png" />
+    <Image Include="Resource\Textures\marble.jpg" />
+    <Image Include="Resource\Textures\metal.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Depth.fs" />
-    <None Include="Depth.vs" />
-    <None Include="Light.fs" />
-    <None Include="Light.vs" />
     <None Include="LampShader.fs" />
     <None Include="LampShader.vs" />
+    <None Include="Resource\Shaders\Depth.fs" />
+    <None Include="Resource\Shaders\Depth.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
