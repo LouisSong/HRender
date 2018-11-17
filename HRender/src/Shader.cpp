@@ -28,7 +28,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	}
 	catch (std::ifstream::failure e)
 	{
-		std::cout << "ERROR::LOAD SHADER FAILED" << std::endl;
+		std::cout << "ERROR::LOAD SHADER FAILED" << vertexPath << std::endl;
 	}
 
 	const char* vShaderCode = vertexCode.c_str();
@@ -46,7 +46,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		std::cout << "vertext shader compilation failed\n" << infoLog << std::endl;
+		std::cout << "vertext shader compilation failed\n"<< vertexPath << infoLog << std::endl;
 	}
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -57,7 +57,7 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	if (!success)
 	{
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		std::cout << "fragment shader compilation failed\n" << infoLog << std::endl;
+		std::cout << "fragment shader compilation failed\n" << fragmentPath << infoLog << std::endl;
 	}
 
 	ID = glCreateProgram();

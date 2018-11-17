@@ -19,54 +19,56 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{e3dcfede-5a68-4876-b57d-63355bbcac2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{5afedc59-65d9-4e4a-91b4-17a893de5789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\zhenji">
+      <UniqueIdentifier>{f67738f0-b21e-4db1-8e87-f8bc5bd31e4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
-    <Text Include="simple.fs">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="simple.vs">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="headicon.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="container2.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="container2_specular.png">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Resource\Textures\marble.jpg">
       <Filter>Resource Files\Textures</Filter>
     </Image>
     <Image Include="Resource\Textures\metal.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="Resource\Models\zhenji\zhenji256.png">
+      <Filter>Resource Files\Models\zhenji</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LampShader.fs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="LampShader.vs">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resource\Shaders\Depth.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Resource\Shaders\Depth.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Depth.vs">
-      <Filter>Resource Files</Filter>
+    <None Include="Resource\Shaders\LampShader.fs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Depth.fs">
-      <Filter>Resource Files</Filter>
+    <None Include="Resource\Shaders\LampShader.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Light.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Light.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\simple.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\simple.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SingleColor.fs" />
+    <None Include="Resource\Shaders\SingleColor.vs" />
+    <None Include="Resource\Models\zhenji\ZhenJi.xyz">
+      <Filter>Resource Files\Models\zhenji</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
