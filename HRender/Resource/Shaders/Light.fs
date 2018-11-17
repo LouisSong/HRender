@@ -107,6 +107,6 @@ void main()
 	{
 		result += CalcPointLight(pointLights[i],norm,FragPos,viewDir);
 	}
-
+	result = vec3(texture(material.Diffuse1,TexCoords));
 	FragColor = vec4(result,1);
 }
