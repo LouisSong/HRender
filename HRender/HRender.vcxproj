@@ -153,6 +153,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\Models\zhenji\zhenji256.png" />
+    <Image Include="Resource\Textures\blending_transparent_window.png" />
+    <Image Include="Resource\Textures\container2_specular.png" />
+    <Image Include="Resource\Textures\grass.png" />
     <Image Include="Resource\Textures\marble.jpg" />
     <Image Include="Resource\Textures\metal.png" />
   </ItemGroup>

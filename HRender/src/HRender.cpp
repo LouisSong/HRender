@@ -37,6 +37,7 @@ Camera* camera;
 
 int main()
 {
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -77,6 +78,7 @@ int main()
 	//unsigned int texture2 = Res::loadTextureFromFile("headicon.png");
 	unsigned int cubeTexture = Res::loadTextureFromFile("Resource/Textures/marble.jpg");
 	unsigned int floorTexutre = Res::loadTextureFromFile("Resource/Textures/metal.png");
+	unsigned int grassTexutre = Res::loadTextureFromFile("Resource/Textures/blending_transparent_window.png");
 	unsigned int zhenjiTexutre = Res::loadTextureFromFile("Resource/Models/zhenji/zhenji256.png");
 	
 #pragma region InitCamera
@@ -209,6 +211,25 @@ int main()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
+	std::vector<glm::vec3> grassPositions;
+	grassPositions.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	grassPositions.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+	grassPositions.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	grassPositions.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	grassPositions.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	
+
+	float grassVertices[] = {
+		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+	};
+
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -233,10 +254,22 @@ int main()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
+	//grass vao
+	unsigned int grassVAO, grassVBO;
+	glGenVertexArrays(1, &grassVAO);
+	glGenBuffers(1, &grassVBO);
+	glBindVertexArray(grassVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(grassVertices), &grassVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+	glBindVertexArray(0);
 
 	//Model yuqiang("nanosuit/nanosuit.xyz");
 	Model zhenji("Resource/Models/zhenji/ZhenJi.xyz");
-	//Model zhenji("Resource/Models/zhenji/B.xyz");
+	//Model gameModel("Resource/Models/.FBX");
 
 	depthShader.use();
 	depthShader.setInt("texture1", 0);
@@ -252,6 +285,9 @@ int main()
 		camera->UpdatePosition();
 		camera->UpdateViewMatrix();
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -261,6 +297,9 @@ int main()
 
 		glEnable(GL_STENCIL_TEST);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 		glStencilMask(0x00);//绘制地面不更新stencil buffer
@@ -280,11 +319,7 @@ int main()
 		simpleShader.SetMatrix4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
-		
-		//绘制cube，更新stencil buffer
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-		
+
 		//cube1
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -310,51 +345,78 @@ int main()
 		lightShader.SetMatrix4("projection", projection);
 
 		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		lightShader.SetMatrix4("model", model);
 		glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
-		
+
+		//simpleShader.use();
 		zhenji.Draw(simpleShader);
 
-		//绘制描边
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
-		singleColorShader.use();
-		singleColorShader.SetMatrix4("view", view);
-		singleColorShader.SetMatrix4("projection", projection);
-
-		//cube1 out line
-		glBindVertexArray(cubeVAO);
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
-		model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-		singleColorShader.SetMatrix4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		//cube2 out line
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
-		singleColorShader.SetMatrix4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		//甄姬 outline
+		//grass
+		simpleShader.use();
+		glBindVertexArray(grassVAO);
+		glBindTexture(GL_TEXTURE_2D, grassTexutre);
+		glActiveTexture(GL_TEXTURE0);
+		for (int i = 0; i < grassPositions.size(); i++)
+		{
+			model = glm::mat4();
+			model = glm::translate(model, grassPositions[i]);
+			simpleShader.SetMatrix4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
 		glBindVertexArray(0);
-
-		//甄姬
+		
+		//绘制cube，更新stencil buffer
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
 		
 		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
 		model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		singleColorShader.SetMatrix4("model", model);
+		lightShader.SetMatrix4("model", model);
+		glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
+		//gameModel.Draw(simpleShader);
 
-		zhenji.Draw(singleColorShader);
+		//绘制描边
+		//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		//glStencilMask(0x00);
+		//glDisable(GL_DEPTH_TEST);
+
+		//singleColorShader.use();
+		//singleColorShader.SetMatrix4("view", view);
+		//singleColorShader.SetMatrix4("projection", projection);
+
+		////cube1 out line
+		//glBindVertexArray(cubeVAO);
+
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
+		//model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		//singleColorShader.SetMatrix4("model", model);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		////cube2 out line
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
+		//model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		//singleColorShader.SetMatrix4("model", model);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		////甄姬 outline
+		//glBindVertexArray(0);
+
+		////甄姬
+		//
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+		//model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
+		//model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//singleColorShader.SetMatrix4("model", model);
+
+		//zhenji.Draw(singleColorShader);
 
 		glBindVertexArray(0);
 		glStencilMask(0xFF);

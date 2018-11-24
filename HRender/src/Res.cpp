@@ -19,8 +19,6 @@ Texture Res::loadTexture(const GLchar * path, TextureType type)
 	return texture;
 }
 
-unsigned int x = 0;
-
 unsigned int Res::loadTextureFromFile(const GLchar * texturePath)
 {
 	std::cout << texturePath << std::endl;
