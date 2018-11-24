@@ -105,11 +105,24 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType
 {
 	std::vector<Texture> textures;
 	unsigned int textureCount = mat->GetTextureCount(type);
+	std::string character = "Character";
 	for (unsigned int i = 0; i < textureCount; i++)
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);
-		std::string path = directory + "/" + std::string(str.C_Str());
+		
+		std::string path = std::string(str.C_Str());
+
+		if (path.find(character) != std::string::npos)
+		{
+			path = path.substr(path.find_last_of('\\')+1);
+			path = path.substr(0,path.find('.'));
+			path = path + ".tga";
+			//std::replace(path.begin(), path.end(), "PSD", "tga");
+		}
+
+		path = directory + "/" + path;
+
 		Texture texture = Res::loadTexture(path.c_str(),textureType);
 		textures.push_back(texture);
 	}
