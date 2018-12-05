@@ -26,8 +26,8 @@ int main();
 void processInput(GLFWwindow *window);
 
 
-const unsigned int SCR_WIDTH = 1024;
-const unsigned int SCR_HEIGHT = 512;
+unsigned int SCR_WIDTH = 1024;
+unsigned int SCR_HEIGHT = 512;
 
 int drawMode = 0;
 double lastTime = 0;
@@ -72,6 +72,7 @@ int main()
 	Shader depthShader("Resource/Shaders/Depth.vs", "Resource/Shaders/Depth.fs");
 	Shader singleColorShader("Resource/Shaders/SingleColor.vs", "Resource/Shaders/SingleColor.fs");
 	Shader simpleShader("Resource/Shaders/simple.vs", "Resource/Shaders/simple.fs");
+	Shader screenShader("Resource/Shaders/Screen.vs", "Resource/Shaders/Screen.fs");
 
 	//unsigned int zhenji256 = Res::loadTextureFromFile("glass_dif.png");
 	//unsigned int specularMap = Res::loadTextureFromFile("container2_specular.png");
@@ -230,6 +231,51 @@ int main()
 		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
 	};
 
+	float quadVertices[] = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
+
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+#pragma region framebuffer
+	//frameBuffer
+	unsigned int framebuffer;
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	//colorbuffer
+	unsigned int texColorBuffer;
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0.0f, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//attach to framebuffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	//render buffer
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	//attach to framebuffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	//check framebuffer
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER::Frame buffer is not complete" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#pragma endregion
+
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -266,6 +312,18 @@ int main()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
 	glBindVertexArray(0);
+	//quad vao;
+	unsigned int quadVAO, quadVBO;
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	glBindVertexArray(0);
 
 	//Model yuqiang("nanosuit/nanosuit.xyz");
 	Model zhenji("Resource/Models/zhenji/ZhenJi.xyz");
@@ -285,12 +343,14 @@ int main()
 		camera->UpdatePosition();
 		camera->UpdateViewMatrix();
 
+		//first pass 正常绘制场景,绑定framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
 		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
@@ -320,65 +380,79 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
-		//cube1
-		glBindVertexArray(cubeVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
+			//cube1
+			glBindVertexArray(cubeVAO);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, cubeTexture);
 
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
-		simpleShader.SetMatrix4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		//cube2
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
-		simpleShader.SetMatrix4("model", model);
-		//glBindTexture(GL_TEXTURE0, zhenjiTexutre);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		glBindVertexArray(0);
-
-		//甄姬
-		lightShader.use();
-		lightShader.SetMatrix4("view", view);
-		lightShader.SetMatrix4("projection", projection);
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-		model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		lightShader.SetMatrix4("model", model);
-		glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
-
-		//simpleShader.use();
-		zhenji.Draw(simpleShader);
-
-		//grass
-		simpleShader.use();
-		glBindVertexArray(grassVAO);
-		glBindTexture(GL_TEXTURE_2D, grassTexutre);
-		glActiveTexture(GL_TEXTURE0);
-		for (int i = 0; i < grassPositions.size(); i++)
-		{
 			model = glm::mat4();
-			model = glm::translate(model, grassPositions[i]);
+			model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
 			simpleShader.SetMatrix4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			//cube2
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
+			simpleShader.SetMatrix4("model", model);
+			//glBindTexture(GL_TEXTURE0, zhenjiTexutre);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			glBindVertexArray(0);
+
+			//甄姬
+			lightShader.use();
+			lightShader.SetMatrix4("view", view);
+			lightShader.SetMatrix4("projection", projection);
+
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+			//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			lightShader.SetMatrix4("model", model);
+			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
+
+			//simpleShader.use();
+			zhenji.Draw(simpleShader);
+
+			//grass
+			simpleShader.use();
+			glBindVertexArray(grassVAO);
+			glBindTexture(GL_TEXTURE_2D, grassTexutre);
+			glActiveTexture(GL_TEXTURE0);
+			for (int i = 0; i < grassPositions.size(); i++)
+			{
+				model = glm::mat4();
+				model = glm::translate(model, grassPositions[i]);
+				simpleShader.SetMatrix4("model", model);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
+			glBindVertexArray(0);
+
+			//绘制cube，更新stencil buffer
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF);
+
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			lightShader.SetMatrix4("model", model);
+			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
+			//gameModel.Draw(simpleShader);
+		
+		//second path 绘制quad
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glDisable(GL_DEPTH_TEST);
+			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+			screenShader.use();
+			glBindVertexArray(quadVAO);
+			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+			glActiveTexture(GL_TEXTURE0);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
-		}
-		glBindVertexArray(0);
-		
-		//绘制cube，更新stencil buffer
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-		
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
-		model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		lightShader.SetMatrix4("model", model);
-		glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
-		//gameModel.Draw(simpleShader);
 
 		//绘制描边
 		//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -548,6 +622,8 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	SCR_WIDTH = width;
+	SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
 }
 
