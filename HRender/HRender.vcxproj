@@ -167,6 +167,8 @@
     <None Include="Resource\Shaders\LampShader.vs" />
     <None Include="Resource\Shaders\Light.fs" />
     <None Include="Resource\Shaders\Light.vs" />
+    <None Include="Resource\Shaders\Screen.fs" />
+    <None Include="Resource\Shaders\Screen.vs" />
     <None Include="Resource\Shaders\simple.fs" />
     <None Include="Resource\Shaders\simple.vs" />
     <None Include="Resource\Shaders\SingleColor.fs" />

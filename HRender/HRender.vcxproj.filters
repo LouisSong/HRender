@@ -79,6 +79,12 @@
     <None Include="Resource\Models\zhenji\ZhenJi.xyz">
       <Filter>Resource Files\Models\zhenji</Filter>
     </None>
+    <None Include="Resource\Shaders\Screen.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Screen.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">
