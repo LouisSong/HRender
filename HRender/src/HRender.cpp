@@ -26,8 +26,8 @@ int main();
 void processInput(GLFWwindow *window);
 
 
-const unsigned int SCR_WIDTH = 1024;
-const unsigned int SCR_HEIGHT = 512;
+unsigned int SCR_WIDTH = 1024;
+unsigned int SCR_HEIGHT = 512;
 
 int drawMode = 0;
 double lastTime = 0;
@@ -37,6 +37,7 @@ Camera* camera;
 
 int main()
 {
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -65,12 +66,21 @@ int main()
 
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	Shader lampShader("LampShader.vs", "LampShader.fs");
-	Shader lightShader("Light.vs", "Light.fs");
+
+	//Shader lampShader("LampShader.vs", "LampShader.fs");
+	Shader lightShader("Resource/Shaders/Light.vs", "Resource/Shaders/Light.fs");
+	Shader depthShader("Resource/Shaders/Depth.vs", "Resource/Shaders/Depth.fs");
+	Shader singleColorShader("Resource/Shaders/SingleColor.vs", "Resource/Shaders/SingleColor.fs");
+	Shader simpleShader("Resource/Shaders/simple.vs", "Resource/Shaders/simple.fs");
+	Shader screenShader("Resource/Shaders/Screen.vs", "Resource/Shaders/Screen.fs");
 
 	//unsigned int zhenji256 = Res::loadTextureFromFile("glass_dif.png");
 	//unsigned int specularMap = Res::loadTextureFromFile("container2_specular.png");
-	unsigned int texture2 = Res::loadTextureFromFile("headicon.png");
+	//unsigned int texture2 = Res::loadTextureFromFile("headicon.png");
+	unsigned int cubeTexture = Res::loadTextureFromFile("Resource/Textures/marble.jpg");
+	unsigned int floorTexutre = Res::loadTextureFromFile("Resource/Textures/metal.png");
+	unsigned int grassTexutre = Res::loadTextureFromFile("Resource/Textures/blending_transparent_window.png");
+	unsigned int zhenjiTexutre = Res::loadTextureFromFile("Resource/Models/zhenji/zhenji256.png");
 	
 #pragma region InitCamera
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -128,49 +138,60 @@ int main()
 	pointLight->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 #pragma endregion
 
-	float vertices[] = {
-		// positions          // normals           // texture coords
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+	float cubeVertices[] = {
+		// positions          // texture Coords
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	};
+
+	float planeVertices[] = {
+		// positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
+		5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+		-5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+
+		5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
+		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+		5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 	};
 
 	unsigned int indices[] = {  // note that we start from 0!
@@ -191,49 +212,125 @@ int main()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	unsigned int VAO;
-	unsigned int VBO;
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	std::vector<glm::vec3> grassPositions;
+	grassPositions.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	grassPositions.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+	grassPositions.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	grassPositions.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	grassPositions.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
 	
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
 
-	//=================== light object ==================
+	float grassVertices[] = {
+		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
 
-	unsigned int lightVAO;
-	glGenVertexArrays(1, &lightVAO);
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+	};
 
-	glBindVertexArray(lightVAO);
+	float quadVertices[] = {
+		// positions   // texCoords
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		-1.0f, -1.0f,  0.0f, 0.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		-1.0f,  1.0f,  0.0f, 1.0f,
+		1.0f, -1.0f,  1.0f, 0.0f,
+		1.0f,  1.0f,  1.0f, 1.0f
+	};
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)0);
+#pragma region framebuffer
+	//frameBuffer
+	unsigned int framebuffer;
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	//colorbuffer
+	unsigned int texColorBuffer;
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0.0f, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//attach to framebuffer
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	//render buffer
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	//attach to framebuffer
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	//check framebuffer
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER::Frame buffer is not complete" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#pragma endregion
+
+	// cube VAO
+	unsigned int cubeVAO, cubeVBO;
+	glGenVertexArrays(1, &cubeVAO);
+	glGenBuffers(1, &cubeVBO);
+	glBindVertexArray(cubeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+	// plane VAO
+	unsigned int planeVAO, planeVBO;
+	glGenVertexArrays(1, &planeVAO);
+	glGenBuffers(1, &planeVBO);
+	glBindVertexArray(planeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+	//grass vao
+	unsigned int grassVAO, grassVBO;
+	glGenVertexArrays(1, &grassVAO);
+	glGenBuffers(1, &grassVBO);
+	glBindVertexArray(grassVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(grassVertices), &grassVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
+	glBindVertexArray(0);
+	//quad vao;
+	unsigned int quadVAO, quadVBO;
+	glGenVertexArrays(1, &quadVAO);
+	glGenBuffers(1, &quadVBO);
+	glBindVertexArray(quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glBindVertexArray(0);
 
-	Model yuqiang("nanosuit/nanosuit.xyz");
+	//Model yuqiang("nanosuit/nanosuit.xyz");
+	Model zhenji("Resource/Models/zhenji/ZhenJi.xyz");
+	//Model gameModel("Resource/Models/.FBX");
+
+	depthShader.use();
+	depthShader.setInt("texture1", 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -246,87 +343,233 @@ int main()
 		camera->UpdatePosition();
 		camera->UpdateViewMatrix();
 
+		//first pass 正常绘制场景,绑定framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		glEnable(GL_DEPTH_TEST);
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glDepthFunc(GL_LESS);
+		//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
 		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+		glEnable(GL_STENCIL_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
 
-		//========================= 绘制灯光物件 ===========================
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+		glStencilMask(0x00);//绘制地面不更新stencil buffer
+		
+		simpleShader.use();
 
 		glm::mat4 view = camera->view;
-		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 1.1f, 100.0f);
 
-#pragma region dirLight
-		glm::vec3 lightPos(5.0f, 5.0f, 0.0f);
+		simpleShader.SetMatrix4("view", view);
+		simpleShader.SetMatrix4("projection", projection);
 
-		glm::mat4 model;
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f));
+		//floor
+		glm::mat4 model = glm::mat4();
+		glBindVertexArray(planeVAO);
+		glBindTexture(GL_TEXTURE_2D, floorTexutre);
+		simpleShader.SetMatrix4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
 
-		lampShader.use();
-		lampShader.SetMatrix4("model", model);
-		lampShader.SetMatrix4("view", view);
-		lampShader.SetMatrix4("projection", projection);
+			//cube1
+			glBindVertexArray(cubeVAO);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, cubeTexture);
 
-		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);		
-#pragma endregion
-
-#pragma region pointLights
-		for (int i = 0; i < 4; i++)
-		{
-			glm::mat4 model;
-			model = glm::translate(model, (*pointLights[i]).position);
-			model = glm::scale(model, glm::vec3(0.2f));
-			lampShader.SetMatrix4("model", model);
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
+			simpleShader.SetMatrix4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+
+			//cube2
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
+			simpleShader.SetMatrix4("model", model);
+			//glBindTexture(GL_TEXTURE0, zhenjiTexutre);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			glBindVertexArray(0);
+
+			//甄姬
+			lightShader.use();
+			lightShader.SetMatrix4("view", view);
+			lightShader.SetMatrix4("projection", projection);
+
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+			//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			lightShader.SetMatrix4("model", model);
+			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
+
+			//simpleShader.use();
+			zhenji.Draw(simpleShader);
+
+			//grass
+			simpleShader.use();
+			glBindVertexArray(grassVAO);
+			glBindTexture(GL_TEXTURE_2D, grassTexutre);
+			glActiveTexture(GL_TEXTURE0);
+			for (int i = 0; i < grassPositions.size(); i++)
+			{
+				model = glm::mat4();
+				model = glm::translate(model, grassPositions[i]);
+				simpleShader.SetMatrix4("model", model);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
+			glBindVertexArray(0);
+
+			//绘制cube，更新stencil buffer
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF);
+
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+			model = glm::scale(model, glm::vec3(0.01f, 0.01f, 0.01f));
+			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			lightShader.SetMatrix4("model", model);
+			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
+			//gameModel.Draw(simpleShader);
+		
+		//second path 绘制quad
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			glDisable(GL_DEPTH_TEST);
+			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+			screenShader.use();
+			glBindVertexArray(quadVAO);
+			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+			glActiveTexture(GL_TEXTURE0);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//绘制描边
+		//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		//glStencilMask(0x00);
+		//glDisable(GL_DEPTH_TEST);
+
+		//singleColorShader.use();
+		//singleColorShader.SetMatrix4("view", view);
+		//singleColorShader.SetMatrix4("projection", projection);
+
+		////cube1 out line
+		//glBindVertexArray(cubeVAO);
+
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
+		//model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		//singleColorShader.SetMatrix4("model", model);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		////cube2 out line
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
+		//model = glm::scale(model, glm::vec3(1.1f, 1.1f, 1.1f));
+		//singleColorShader.SetMatrix4("model", model);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		////甄姬 outline
+		//glBindVertexArray(0);
+
+		////甄姬
+		//
+		//model = glm::mat4();
+		//model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+		//model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
+		//model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//singleColorShader.SetMatrix4("model", model);
+
+		//zhenji.Draw(singleColorShader);
 
 		glBindVertexArray(0);
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+	//
+		
+
+		//========================= 绘制灯光物件 ===========================
+
+
+#pragma region dirLight
+//		glm::vec3 lightPos(5.0f, 5.0f, 0.0f);
+//
+//		glm::mat4 model;
+//		model = glm::translate(model, lightPos);
+//		model = glm::scale(model, glm::vec3(0.2f));
+//
+//		lampShader.use();
+//		lampShader.SetMatrix4("model", model);
+//		lampShader.SetMatrix4("view", view);
+//		lampShader.SetMatrix4("projection", projection);
+//
+//		glBindVertexArray(lightVAO);
+//		glDrawArrays(GL_TRIANGLES, 0, 36);		
+//#pragma endregion
+//
+//#pragma region pointLights
+//		for (int i = 0; i < 4; i++)
+//		{
+//			glm::mat4 model;
+//			model = glm::translate(model, (*pointLights[i]).position);
+//			model = glm::scale(model, glm::vec3(0.2f));
+//			lampShader.SetMatrix4("model", model);
+//			glDrawArrays(GL_TRIANGLES, 0, 36);
+//		}
+//
+//		glBindVertexArray(0);
 #pragma endregion
 
 		//========================== 绘制方块 =====================================
 
-		lightShader.use();
+		/*lightShader.use();
 		lightShader.setFloat("material.shininess", 32.0f);
 
 		lightShader.SetVector3("light.ambient", 0.2f, 0.2f, 0.2f);
 		lightShader.SetVector3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		lightShader.SetVector3("light.specular", 1.0f, 1.0f, 1.0f);
 		lightShader.SetVector3("light.position", lightPos);
-		lightShader.SetVector3("viewPos", camera->pos);
+		lightShader.SetVector3("viewPos", camera->pos);*/
 
-		for (int i = 0; i < 4; i++)
-		{
-			(*pointLights[i]).Prepare(&lightShader, i);
-		}
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, texture2);
+
+		//for (int i = 0; i < 4; i++)
+		//{
+		//	(*pointLights[i]).Prepare(&lightShader, i);
+		//}
+		//
+		//model = glm::mat4();
+		////model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(0.15f));
+		//model = glm::translate(model,glm::vec3(0,0.0f,0));
+
+
+		//glm::mat4 normalModel;
+		//normalModel = glm::mat3(glm::transpose(glm::inverse(normalModel)));
+
+		//lightShader.SetMatrix3("normalModel",normalModel);
+
+		//lightShader.SetMatrix4("model", model);
+		//lightShader.SetMatrix4("view", camera->view);
+		//lightShader.SetMatrix4("projection", projection);
+
+		//yuqiang.Draw(lightShader);
+
 		
-		model = glm::mat4();
-		//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.15f));
-		model = glm::translate(model,glm::vec3(0,0.0f,0));
 
-
-		glm::mat4 normalModel;
-		normalModel = glm::mat3(glm::transpose(glm::inverse(normalModel)));
-
-		lightShader.SetMatrix3("normalModel",normalModel);
-
-		lightShader.SetMatrix4("model", model);
-		lightShader.SetMatrix4("view", camera->view);
-		lightShader.SetMatrix4("projection", projection);
-
-		yuqiang.Draw(lightShader);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, 1);
-
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, specularMap);
@@ -346,8 +589,8 @@ int main()
 		glfwPollEvents();
 	}
 
-	glDeleteBuffers(1, &VBO);
-	glDeleteVertexArrays(1, &lightVAO);
+	//glDeleteBuffers(1, &VBO);
+	//glDeleteVertexArrays(1, &lightVAO);
 
 	glfwTerminate();
     return 0;
@@ -379,6 +622,8 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+	SCR_WIDTH = width;
+	SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
 }
 

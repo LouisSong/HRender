@@ -149,23 +149,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="simple.fs" />
     <Text Include="ReadMe.txt" />
-    <Text Include="simple.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="container.jpg" />
-    <Image Include="container2.png" />
-    <Image Include="container2_specular.png" />
-    <Image Include="headicon.png" />
+    <Image Include="Resource\Models\zhenji\zhenji256.png" />
+    <Image Include="Resource\Textures\blending_transparent_window.png" />
+    <Image Include="Resource\Textures\container2_specular.png" />
+    <Image Include="Resource\Textures\grass.png" />
+    <Image Include="Resource\Textures\marble.jpg" />
+    <Image Include="Resource\Textures\metal.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Depth.fs" />
-    <None Include="Depth.vs" />
-    <None Include="Light.fs" />
-    <None Include="Light.vs" />
-    <None Include="LampShader.fs" />
-    <None Include="LampShader.vs" />
+    <None Include="Resource\Models\zhenji\ZhenJi.xyz" />
+    <None Include="Resource\Shaders\Depth.fs" />
+    <None Include="Resource\Shaders\Depth.vs" />
+    <None Include="Resource\Shaders\LampShader.fs" />
+    <None Include="Resource\Shaders\LampShader.vs" />
+    <None Include="Resource\Shaders\Light.fs" />
+    <None Include="Resource\Shaders\Light.vs" />
+    <None Include="Resource\Shaders\Screen.fs" />
+    <None Include="Resource\Shaders\Screen.vs" />
+    <None Include="Resource\Shaders\simple.fs" />
+    <None Include="Resource\Shaders\simple.vs" />
+    <None Include="Resource\Shaders\SingleColor.fs" />
+    <None Include="Resource\Shaders\SingleColor.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">

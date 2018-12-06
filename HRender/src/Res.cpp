@@ -19,8 +19,6 @@ Texture Res::loadTexture(const GLchar * path, TextureType type)
 	return texture;
 }
 
-unsigned int x = 0;
-
 unsigned int Res::loadTextureFromFile(const GLchar * texturePath)
 {
 	std::cout << texturePath << std::endl;
@@ -46,8 +44,8 @@ unsigned int Res::loadTextureFromFile(const GLchar * texturePath)
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 	else
 	{
