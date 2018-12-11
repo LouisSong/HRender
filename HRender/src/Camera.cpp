@@ -8,7 +8,7 @@ Camera::Camera(glm::vec3 pos,glm::vec3 target, glm::vec3 up)
 	this->pos = pos;
 	this->target = target;
 	this->worldUp = up;
-	this->fov = 45.0f;
+	this->fov = 60;
 }
 
 void Camera::UpdateViewMatrix()
