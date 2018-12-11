@@ -153,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\Models\zhenji\zhenji256.png" />
+    <Image Include="Resource\Skyboxes\1\back.jpg" />
+    <Image Include="Resource\Skyboxes\1\bottom.jpg" />
+    <Image Include="Resource\Skyboxes\1\front.jpg" />
+    <Image Include="Resource\Skyboxes\1\left.jpg" />
+    <Image Include="Resource\Skyboxes\1\right.jpg" />
+    <Image Include="Resource\Skyboxes\1\top.jpg" />
     <Image Include="Resource\Textures\blending_transparent_window.png" />
     <Image Include="Resource\Textures\container2_specular.png" />
     <Image Include="Resource\Textures\grass.png" />
@@ -167,12 +173,16 @@
     <None Include="Resource\Shaders\LampShader.vs" />
     <None Include="Resource\Shaders\Light.fs" />
     <None Include="Resource\Shaders\Light.vs" />
+    <None Include="Resource\Shaders\Reflection.fs" />
+    <None Include="Resource\Shaders\Reflection.vs" />
     <None Include="Resource\Shaders\Screen.fs" />
     <None Include="Resource\Shaders\Screen.vs" />
     <None Include="Resource\Shaders\simple.fs" />
     <None Include="Resource\Shaders\simple.vs" />
     <None Include="Resource\Shaders\SingleColor.fs" />
     <None Include="Resource\Shaders\SingleColor.vs" />
+    <None Include="Resource\Shaders\SkyBox.fs" />
+    <None Include="Resource\Shaders\SkyBox.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">

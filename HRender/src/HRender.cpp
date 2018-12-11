@@ -73,6 +73,8 @@ int main()
 	Shader singleColorShader("Resource/Shaders/SingleColor.vs", "Resource/Shaders/SingleColor.fs");
 	Shader simpleShader("Resource/Shaders/simple.vs", "Resource/Shaders/simple.fs");
 	Shader screenShader("Resource/Shaders/Screen.vs", "Resource/Shaders/Screen.fs");
+	Shader skyBoxShader("Resource/Shaders/SkyBox.vs", "Resource/Shaders/SkyBox.fs");
+	Shader reflectShader("Resource/Shaders/Reflection.vs", "Resource/Shaders/Reflection.fs");
 
 	//unsigned int zhenji256 = Res::loadTextureFromFile("glass_dif.png");
 	//unsigned int specularMap = Res::loadTextureFromFile("container2_specular.png");
@@ -82,6 +84,17 @@ int main()
 	unsigned int grassTexutre = Res::loadTextureFromFile("Resource/Textures/blending_transparent_window.png");
 	unsigned int zhenjiTexutre = Res::loadTextureFromFile("Resource/Models/zhenji/zhenji256.png");
 	
+	std::vector<std::string> faces = {
+		"Resource/Skyboxes/1/right.jpg",
+		"Resource/Skyboxes/1/left.jpg",
+		"Resource/Skyboxes/1/top.jpg",
+		"Resource/Skyboxes/1/bottom.jpg",
+		"Resource/Skyboxes/1/front.jpg",
+		"Resource/Skyboxes/1/back.jpg"
+	};
+
+	unsigned int cubmapTexture = Res::loadCubmapFromFile(faces);
+
 #pragma region InitCamera
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraTarget = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -185,13 +198,13 @@ int main()
 
 	float planeVertices[] = {
 		// positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
-		5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-		-5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+		5.0f, -0.0f,  5.0f,  2.0f, 0.0f,
+		-5.0f, -0.0f,  5.0f,  0.0f, 0.0f,
+		-5.0f, -0.0f, -5.0f,  0.0f, 2.0f,
 
-		5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-		5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+		5.0f, -0.0f,  5.0f,  2.0f, 0.0f,
+		-5.0f, -0.0f, -5.0f,  0.0f, 2.0f,
+		5.0f, -0.0f, -5.0f,  2.0f, 2.0f
 	};
 
 	unsigned int indices[] = {  // note that we start from 0!
@@ -240,6 +253,51 @@ int main()
 		-1.0f,  1.0f,  0.0f, 1.0f,
 		1.0f, -1.0f,  1.0f, 0.0f,
 		1.0f,  1.0f,  1.0f, 1.0f
+	};
+
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
 	};
 
 #pragma region framebuffer
@@ -324,6 +382,16 @@ int main()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glBindVertexArray(0);
+	//skybox vao
+	unsigned int skyboxVAO, skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBindVertexArray(0);
 
 	//Model yuqiang("nanosuit/nanosuit.xyz");
 	Model zhenji("Resource/Models/zhenji/ZhenJi.xyz");
@@ -344,7 +412,7 @@ int main()
 		camera->UpdateViewMatrix();
 
 		//first pass 正常绘制场景,绑定framebuffer
-		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		//glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -354,6 +422,10 @@ int main()
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
 		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		glm::mat4 view = camera->view;
+		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 0.01f, 100.0f);
 
 		glEnable(GL_STENCIL_TEST);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -361,14 +433,12 @@ int main()
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_BACK);
 
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+		
 		glStencilMask(0x00);//绘制地面不更新stencil buffer
 		
 		simpleShader.use();
 
-		glm::mat4 view = camera->view;
-		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 1.1f, 100.0f);
-
+		
 		simpleShader.SetMatrix4("view", view);
 		simpleShader.SetMatrix4("projection", projection);
 
@@ -386,7 +456,7 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, cubeTexture);
 
 			model = glm::mat4();
-			model = glm::translate(model, glm::vec3(-1.0f, 0.1f, -1.0f));
+			model = glm::translate(model, glm::vec3(-1.0f, 0.51f, -1.0f));
 			simpleShader.SetMatrix4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -395,7 +465,7 @@ int main()
 			model = glm::translate(model, glm::vec3(2.0f, 0.1f, 0.0f));
 			simpleShader.SetMatrix4("model", model);
 			//glBindTexture(GL_TEXTURE0, zhenjiTexutre);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 			glBindVertexArray(0);
 
@@ -405,14 +475,26 @@ int main()
 			lightShader.SetMatrix4("projection", projection);
 
 			model = glm::mat4();
-			model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-			//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+			//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-			lightShader.SetMatrix4("model", model);
+			//lightShader.SetMatrix4("model", model);
+
+			glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
+
+			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
 
-			//simpleShader.use();
-			zhenji.Draw(simpleShader);
+			reflectShader.use();
+			reflectShader.SetMatrix3("normalModel", normalModel);
+			reflectShader.SetMatrix4("model", model);
+			reflectShader.SetMatrix4("view", view);
+			reflectShader.SetMatrix4("projection", projection);
+			reflectShader.SetVector3("cameraPos", camera->pos);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubmapTexture);
+			
+			zhenji.Draw(reflectShader);
 
 			//grass
 			simpleShader.use();
@@ -424,7 +506,7 @@ int main()
 				model = glm::mat4();
 				model = glm::translate(model, grassPositions[i]);
 				simpleShader.SetMatrix4("model", model);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
+				//glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
 			glBindVertexArray(0);
 
@@ -439,20 +521,35 @@ int main()
 			lightShader.SetMatrix4("model", model);
 			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
 			//gameModel.Draw(simpleShader);
+
+			//绘制天空盒
+			glDepthMask(GL_FALSE);
+			glDepthFunc(GL_LEQUAL);
+			skyBoxShader.use();
+			glm::mat4 skyboxView = glm::mat4(glm::mat3(view));
+			skyBoxShader.SetMatrix4("view", skyboxView);
+			skyBoxShader.SetMatrix4("projection", projection);
+			glBindVertexArray(skyboxVAO);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubmapTexture);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+			glDepthMask(GL_TRUE);
+			//glDepthMask(GL_TRUE);
 		
 		//second path 绘制quad
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			glDisable(GL_DEPTH_TEST);
-			glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			//glDisable(GL_DEPTH_TEST);
+			//glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+			//glClear(GL_COLOR_BUFFER_BIT);
+			////glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-			screenShader.use();
-			glBindVertexArray(quadVAO);
-			glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-			glActiveTexture(GL_TEXTURE0);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
+			//screenShader.use();
+			//glBindVertexArray(quadVAO);
+			//glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+			//glActiveTexture(GL_TEXTURE0);
+			//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		//绘制描边
 		//glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

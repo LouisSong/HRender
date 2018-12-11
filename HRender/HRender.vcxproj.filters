@@ -25,6 +25,12 @@
     <Filter Include="Resource Files\Models\zhenji">
       <UniqueIdentifier>{f67738f0-b21e-4db1-8e87-f8bc5bd31e4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Skyboxes">
+      <UniqueIdentifier>{3a88086c-bfe0-42fc-8f16-5d505d43e038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Skyboxes\1">
+      <UniqueIdentifier>{19e56f4a-c1f9-4222-93c6-9debf07fb759}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -47,6 +53,24 @@
     </Image>
     <Image Include="Resource\Textures\blending_transparent_window.png">
       <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\back.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\bottom.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\front.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\left.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\right.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\top.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +107,18 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="Resource\Shaders\Screen.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SkyBox.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SkyBox.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Reflection.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Reflection.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
