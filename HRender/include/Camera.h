@@ -23,8 +23,8 @@ public:
 	glm::mat4 view;
 
 	const float MIN_DISTANCE_FROM_PLAYER = 1.0f;
-	const float MAX_DISTANCE_FROM_PLAYER = 10.0f;
-	float distanceFromPlayer = 5.0f;
+	const float MAX_DISTANCE_FROM_PLAYER = 150.0f;
+	float distanceFromPlayer = 100.0f;
 	
 	float angleAroundPlayer = 0.0f;
 
