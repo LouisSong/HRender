@@ -12,10 +12,12 @@
 #include "Camera.h"
 #include "PointLight.h"
 #include "Res.h"
+#include "Font.h"
 #include <vector>
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <map>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -32,6 +34,9 @@ unsigned int SCR_HEIGHT = 512;
 int drawMode = 0;
 double lastTime = 0;
 float delta = 0;
+int fps = 60;
+
+//std::map<int,int> 
 
 Camera* camera;
 
@@ -66,6 +71,7 @@ int main()
 
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+	Font wryhFont("Resource/Fonts/msyh.ttc");
 
 	//Shader lampShader("LampShader.vs", "LampShader.fs");
 	Shader lightShader("Resource/Shaders/Light.vs", "Resource/Shaders/Light.fs");
@@ -75,6 +81,8 @@ int main()
 	Shader screenShader("Resource/Shaders/Screen.vs", "Resource/Shaders/Screen.fs");
 	Shader skyBoxShader("Resource/Shaders/SkyBox.vs", "Resource/Shaders/SkyBox.fs");
 	Shader reflectShader("Resource/Shaders/Reflection.vs", "Resource/Shaders/Reflection.fs");
+	Shader instanceShader("Resource/Shaders/Instance.vs", "Resource/Shaders/Instance.fs");
+	Shader fontShader("Resource/Shaders/Font.vs", "Resource/Shaders/Font.fs");
 
 	//unsigned int zhenji256 = Res::loadTextureFromFile("glass_dif.png");
 	//unsigned int specularMap = Res::loadTextureFromFile("container2_specular.png");
@@ -232,6 +240,37 @@ int main()
 	grassPositions.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
 	grassPositions.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
 	
+	//Instancing
+	unsigned int amount = 10000;
+	glm::mat4 *modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	srand(glfwGetTime()); // initialize random seed	
+	float radius = 30;
+	float offset = 100.5f;
+	for (unsigned int i = 0; i < amount; i++)
+	{
+		glm::mat4 model;
+		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+		float angle = (float)i / (float)amount * 360.0f;
+		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float x = sin(angle) * radius + displacement;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float y = displacement * 0.4f; // keep height of field smaller compared to width of x and z
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
+
+		// 2. scale: Scale between 0.05 and 0.25f
+		float scale = (rand() % 20) / 100.0f + 0.05;
+		model = glm::scale(model, glm::vec3(scale));
+
+		// 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
+		float rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		// 4. now add to list of matrices
+		modelMatrices[i] = model;
+	}
 
 	float grassVertices[] = {
 		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
@@ -392,19 +431,62 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
+	
 
 	//Model yuqiang("nanosuit/nanosuit.xyz");
 	Model zhenji("Resource/Models/zhenji/ZhenJi.xyz");
 	//Model gameModel("Resource/Models/.FBX");
 
+	Model planet("Resource/Models/planet/planet.obj");
+	Model rock("Resource/Models/rock/rock.obj");
+
+	//instance array
+	unsigned int buffer;
+	glGenBuffers(1, &buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+
+	for (size_t i = 0; i < rock.meshes.size(); i++)
+	{
+		unsigned int VAO = rock.meshes[i].VAO;
+		glBindVertexArray(VAO);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
+
+		glBindVertexArray(0);
+	}
+
+
 	depthShader.use();
 	depthShader.setInt("texture1", 0);
 
+	
+	int time = 0;
+
 	while (!glfwWindowShouldClose(window))
 	{
+		time++;
+
 		double now = glfwGetTime();
 		delta = (float)(now - lastTime);
 		lastTime = now;
+
+		if (time % 100 == 0)
+		{
+			fps = (1.0f / delta);
+			time = 0;
+		}
 
 		processInput(window);
 		//camera->UpdateVectors();
@@ -413,7 +495,9 @@ int main()
 
 		//first pass 正常绘制场景,绑定framebuffer
 		//glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-		glEnable(GL_BLEND);
+		glEnable(GL_PROGRAM_POINT_SIZE);
+		glPointSize(0.3F);
+		//glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_DEPTH_TEST);
@@ -421,11 +505,11 @@ int main()
 		//glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//绘制线条模式
 		//glPolygonMode(GL_BACK, GL_LINE);
-		glClearColor(0.1f, 0.25f, 0.25f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		glm::mat4 view = camera->view;
-		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 0.01f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera->fov), (float)(SCR_WIDTH / SCR_HEIGHT), 0.01f, 1000.0f);
 
 		glEnable(GL_STENCIL_TEST);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -441,15 +525,17 @@ int main()
 		
 		simpleShader.SetMatrix4("view", view);
 		simpleShader.SetMatrix4("projection", projection);
-
+		glDisable(GL_BLEND);
 		//floor
 		glm::mat4 model = glm::mat4();
+		model = glm::scale(model, glm::vec3(1, 0, 1));
 		glBindVertexArray(planeVAO);
-		glBindTexture(GL_TEXTURE_2D, floorTexutre);
+		glBindTexture(GL_TEXTURE_2D, 115);// floorTexutre);
 		simpleShader.SetMatrix4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
+		glEnable(GL_BLEND);
 			//cube1
 			glBindVertexArray(cubeVAO);
 			glActiveTexture(GL_TEXTURE0);
@@ -458,7 +544,7 @@ int main()
 			model = glm::mat4();
 			model = glm::translate(model, glm::vec3(-1.0f, 0.51f, -1.0f));
 			simpleShader.SetMatrix4("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 			//cube2
 			model = glm::mat4();
@@ -494,7 +580,32 @@ int main()
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, cubmapTexture);
 			
-			zhenji.Draw(reflectShader);
+			//zhenji.Draw(reflectShader);
+
+			//planet
+			lightShader.use();
+			lightShader.SetMatrix4("view", view);
+			lightShader.SetMatrix4("projection", projection);
+			model = glm::mat4();
+			model = glm::translate(model,glm::vec3(0.0f, -3.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+			lightShader.SetMatrix4("model", model);
+			planet.Draw(lightShader);
+
+			//instance rocks
+			instanceShader.use();
+			instanceShader.SetMatrix4("view", view);
+			instanceShader.SetMatrix4("projection", projection);
+			
+			for (size_t i = 0; i < rock.meshes.size(); i++)
+			{
+				glBindVertexArray(rock.meshes[i].VAO);
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, rock.meshes[i].textures[0].id);
+				instanceShader.setInt("txture_diffuse1", 0);
+				glDrawElementsInstanced(GL_TRIANGLES, rock.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
+			}
+			glBindVertexArray(0);
 
 			//grass
 			simpleShader.use();
@@ -522,6 +633,9 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, zhenjiTexutre);
 			//gameModel.Draw(simpleShader);
 
+
+			glDisable(GL_BLEND);
+
 			//绘制天空盒
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_LEQUAL);
@@ -536,6 +650,19 @@ int main()
 			glBindVertexArray(0);
 			glDepthMask(GL_TRUE);
 			//glDepthMask(GL_TRUE);
+
+			//glDisable(GL_DEPTH_TEST);
+			//glDepthFunc(GL_LESS);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glm::mat4 projectionOrtho = glm::ortho(
+				0.0f, static_cast<GLfloat>(SCR_WIDTH),
+				0.0f, static_cast<GLfloat>(SCR_HEIGHT));
+
+			std::string fpsString = "Fps:" + std::to_string(fps);
+			wryhFont.RenderText(projectionOrtho, fontShader, fpsString,
+				0, SCR_HEIGHT - 24, 1.0f, glm::vec3(0.5f, 0.8f, 0.2f));
 		
 		//second path 绘制quad
 
@@ -719,8 +846,11 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	SCR_WIDTH = width;
-	SCR_HEIGHT = height;
+	//最小化窗口时是0
+	if(width > 0)
+		SCR_WIDTH = width;
+	if(height > 0)
+		SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
 }
 

@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\louis\openglsetup\lib\assimp\include;C:\Program Files %28x86%29\GLFW\include;D:\louis\openglsetup\lib\glad\include;D:\louis\openglsetup\lib\glm\;D:\louis\openglsetup\lib\glm\gtc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\GLFW\lib;D:\louis\openglsetup\lib\assimp;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\louis\openglsetup\lib\assimp\include;C:\Program Files %28x86%29\GLFW\include;D:\louis\openglsetup\lib\glad\include;D:\louis\openglsetup\lib\glm\;D:\louis\openglsetup\lib\glm\gtc;D:\louis\openglsetup\lib\freetype-2.9.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\GLFW\lib;D:\louis\openglsetup\lib\assimp;D:\louis\openglsetup\lib\freetype-2.9.1\win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -95,7 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc140-mt.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir);$(ProjectDir)/include;$(ProjectDir)/src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/nodefaultlib:"MSVCRT" %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -166,9 +166,14 @@
     <Image Include="Resource\Textures\metal.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Instance.fs" />
+    <None Include="Instance.vs" />
+    <None Include="Resource\Fonts\msyh.ttc" />
     <None Include="Resource\Models\zhenji\ZhenJi.xyz" />
     <None Include="Resource\Shaders\Depth.fs" />
     <None Include="Resource\Shaders\Depth.vs" />
+    <None Include="Resource\Shaders\Font.fs" />
+    <None Include="Resource\Shaders\Font.vs" />
     <None Include="Resource\Shaders\LampShader.fs" />
     <None Include="Resource\Shaders\LampShader.vs" />
     <None Include="Resource\Shaders\Light.fs" />
@@ -189,6 +194,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Font.cpp" />
     <ClCompile Include="src\HRender.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\Model.cpp" />
@@ -201,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Font.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\Model.h" />
     <ClInclude Include="include\PointLight.h" />
