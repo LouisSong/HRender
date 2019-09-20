@@ -6,8 +6,8 @@
 #include<fstream>
 #include<sstream>
 #include<iostream>
-#include<glm.hpp>
-#include<gtc\type_ptr.hpp>
+#include<glm\glm.hpp>
+#include<glm\gtc\type_ptr.hpp>
 
 class Shader
 {
@@ -19,12 +19,12 @@ public:
 	void setBool(const std::string &name, bool value);
 	void setInt(const std::string &name, int value);
 	void setFloat(const std::string &name,float value);
-	void Shader::SetVector3(const std::string &name, float x, float y, float z);
-	void Shader::SetVector3(const std::string &name, glm::vec3 value);
+	void SetVector3(const std::string &name, float x, float y, float z);
+	void SetVector3(const std::string &name, glm::vec3 value);
 
-	void Shader::SetVector4(const std::string &name, float x, float y, float z, float w);
-	void Shader::SetMatrix3(const std::string &name, const glm::mat3 matrix);
-	void Shader::SetMatrix4(const std::string &name, const glm::mat4 matrix);
+	void SetVector4(const std::string &name, float x, float y, float z, float w);
+	void SetMatrix3(const std::string &name, const glm::mat3 matrix);
+	void SetMatrix4(const std::string &name, const glm::mat4 matrix);
 	~Shader();
 };
 

@@ -1,0 +1,75 @@
+﻿  glad.c
+c:\program files (x86)\windows kits\10\include\10.0.17763.0\shared\minwindef.h(130): warning C4005: “APIENTRY”: 宏重定义
+  e:\louis\openglsetup\includes\glad\glad.h(32): note: 参见“APIENTRY”的前一个定义
+  Camera.cpp
+  Font.cpp
+e:\louis\openglsetup\includes\freetype\freetype.h(2669): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+e:\louis\programs\c++\hrender\hrender\src\font.cpp(23): warning C4267: “参数”: 从“size_t”转换到“FT_ULong”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\font.cpp(45): warning C4838: 从“FT_Pos”转换到“GLuint”需要收缩转换
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\utility(174): warning C4267: “初始化”: 从“size_t”转换到“_Ty1”，可能丢失数据
+          with
+          [
+              _Ty1=GLchar
+          ]
+  e:\louis\programs\c++\hrender\hrender\src\font.cpp(47): note: 参见对正在编译的函数 模板 实例化“std::pair<GLchar,Character>::pair<size_t&,Character&,0>(_Other1,_Other2) noexcept”的引用
+          with
+          [
+              _Other1=size_t &,
+              _Other2=Character &
+          ]
+  e:\louis\programs\c++\hrender\hrender\src\font.cpp(47): note: 参见对正在编译的函数 模板 实例化“std::pair<GLchar,Character>::pair<size_t&,Character&,0>(_Other1,_Other2) noexcept”的引用
+          with
+          [
+              _Other1=size_t &,
+              _Other2=Character &
+          ]
+  HRender.cpp
+e:\louis\openglsetup\includes\freetype\freetype.h(2669): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(244): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(261): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(265): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(349): warning C4244: “参数”: 从“float”转换到“GLint”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(484): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(603): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+e:\louis\programs\c++\hrender\hrender\src\hrender.cpp(662): warning C4244: “参数”: 从“unsigned int”转换到“GLfloat”，可能丢失数据
+  Mesh.cpp
+e:\louis\programs\c++\hrender\hrender\src\mesh.cpp(73): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+  Model.cpp
+  PointLight.cpp
+  Res.cpp
+  Shader.cpp
+  stdafx.cpp
+  正在生成代码...
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Init_FreeType，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Done_FreeType，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_New_Face，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Done_Face，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Set_Pixel_Sizes，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Load_Char，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Font.obj : error LNK2019: 无法解析的外部符号 FT_Select_Charmap，该符号在函数 "public: __cdecl Font::Font(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0Font@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwInit，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwTerminate，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwWindowHint，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwCreateWindow，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwWindowShouldClose，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetWindowShouldClose，该符号在函数 "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPEAUGLFWwindow@@@Z) 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetFramebufferSizeCallback，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwPollEvents，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwGetKey，该符号在函数 "void __cdecl processInput(struct GLFWwindow *)" (?processInput@@YAXPEAUGLFWwindow@@@Z) 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetKeyCallback，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetMouseButtonCallback，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetCursorPosCallback，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSetScrollCallback，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwGetTime，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwMakeContextCurrent，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwSwapBuffers，该符号在函数 main 中被引用
+HRender.obj : error LNK2019: 无法解析的外部符号 glfwGetProcAddress，该符号在函数 main 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: __cdecl Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QEAA@XZ)，该符号在函数 "private: void __cdecl Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?loadModel@Model@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: __cdecl Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QEAA@XZ)，该符号在函数 "private: void __cdecl Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?loadModel@Model@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@PEBDI@Z)，该符号在函数 "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 "public: char const * __cdecl Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QEBAPEBDXZ)，该符号在函数 "private: void __cdecl Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?loadModel@Model@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 aiGetMaterialTextureCount，该符号在函数 "public: unsigned int __cdecl aiMaterial::GetTextureCount(enum aiTextureType)const " (?GetTextureCount@aiMaterial@@QEBAIW4aiTextureType@@@Z) 中被引用
+Model.obj : error LNK2019: 无法解析的外部符号 aiGetMaterialTexture，该符号在函数 "public: enum aiReturn __cdecl aiMaterial::GetTexture(enum aiTextureType,unsigned int,struct aiString *,enum aiTextureMapping *,unsigned int *,float *,enum aiTextureOp *,enum aiTextureMapMode *)const " (?GetTexture@aiMaterial@@QEBA?AW4aiReturn@@W4aiTextureType@@IPEAUaiString@@PEAW4aiTextureMapping@@PEAIPEAMPEAW4aiTextureOp@@PEAW4aiTextureMapMode@@@Z) 中被引用
+E:\Louis\OpenGLSetup\Libs\glfw3.lib : warning LNK4272: 库计算机类型“x86”与目标计算机类型“x64”冲突
+E:\Louis\OpenGLSetup\Libs\freetyped.lib : warning LNK4272: 库计算机类型“x86”与目标计算机类型“x64”冲突
+E:\Louis\Programs\C++\HRender\x64\Debug\HRender.exe : fatal error LNK1120: 30 个无法解析的外部命令

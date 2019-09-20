@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "Res.h"
 
 Texture Res::loadTexture(const GLchar * path, TextureType type)

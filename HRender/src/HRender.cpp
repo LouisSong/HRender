@@ -1,11 +1,8 @@
 // HRender.cpp : Defines the entry point for the console application.
 //
-
-#include "stdafx.h"
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <iostream>
-#include <glad\glad.h>
+#include <glad/glad.h>
 #include <GLFW\glfw3.h>
 #include <math.h>
 #include "Shader.h"
@@ -14,9 +11,9 @@
 #include "Res.h"
 #include "Font.h"
 #include <vector>
-#include <glm.hpp>
-#include <gtc\matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc/type_ptr.hpp>
 #include <map>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -28,8 +25,8 @@ int main();
 void processInput(GLFWwindow *window);
 
 
-unsigned int SCR_WIDTH = 1024;
-unsigned int SCR_HEIGHT = 512;
+unsigned int SCR_WIDTH = 1600;
+unsigned int SCR_HEIGHT = 900;
 
 int drawMode = 0;
 double lastTime = 0;
@@ -530,7 +527,7 @@ int main()
 		glm::mat4 model = glm::mat4();
 		model = glm::scale(model, glm::vec3(1, 0, 1));
 		glBindVertexArray(planeVAO);
-		glBindTexture(GL_TEXTURE_2D, 115);// floorTexutre);
+		glBindTexture(GL_TEXTURE_2D, floorTexutre);
 		simpleShader.SetMatrix4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
@@ -553,7 +550,7 @@ int main()
 			//glBindTexture(GL_TEXTURE0, zhenjiTexutre);
 			//glDrawArrays(GL_TRIANGLES, 0, 36);
 
-			glBindVertexArray(0);
+			//glBindVertexArray(0);
 
 			//Õç¼§
 			lightShader.use();
@@ -564,7 +561,7 @@ int main()
 			model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 			//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 			model = glm::rotate(model, (float)glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-			//lightShader.SetMatrix4("model", model);
+			lightShader.SetMatrix4("model", model);
 
 			glm::mat3 normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
 
@@ -580,7 +577,7 @@ int main()
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, cubmapTexture);
 			
-			//zhenji.Draw(reflectShader);
+			zhenji.Draw(reflectShader);
 
 			//planet
 			lightShader.use();

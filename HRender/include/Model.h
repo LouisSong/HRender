@@ -14,7 +14,7 @@ class Model
 public:
 	std::vector<Mesh> meshes;
 
-	Model(char *path);
+	Model(const char *path);
 	void Draw(Shader shader);
 	~Model();
 private:

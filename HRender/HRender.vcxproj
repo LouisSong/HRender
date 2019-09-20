@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,35 +19,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DDA702C4-E5B8-4FB2-BAC6-BC8A80DB6D1A}</ProjectGuid>
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{0AAA6FDD-E291-4DC4-A868-201D238C4D87}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>HRender</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -71,11 +72,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\louis\openglsetup\lib\assimp\include;C:\Program Files %28x86%29\GLFW\include;D:\louis\openglsetup\lib\glad\include;D:\louis\openglsetup\lib\glm\;D:\louis\openglsetup\lib\glm\gtc;D:\louis\openglsetup\lib\freetype-2.9.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\GLFW\lib;D:\louis\openglsetup\lib\assimp;D:\louis\openglsetup\lib\freetype-2.9.1\win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Louis\OpenGLSetup\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Louis\OpenGLSetup\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>E:\Louis\OpenGLSetup\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Louis\OpenGLSetup\Libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,61 +88,72 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\louis\cpp\HRender\HRender\src;D:\louis\cpp\HRender\HRender\include;D:\louis\cpp\HRender\HRender;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>E:\Louis\Programs\C++\HRender\HRender\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc140-mt.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir);$(ProjectDir)/include;$(ProjectDir)/src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/nodefaultlib:"MSVCRT" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;freetyped.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>NotSet</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile />
+      <AdditionalIncludeDirectories>E:\Louis\Programs\C++\HRender\HRender\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;freetyped.lib;assimp-vc140-mt.lib;freetyped.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TargetMachine>NotSet</TargetMachine>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,9 +163,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Font.cpp" />
+    <ClCompile Include="src\HRender.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\PointLight.cpp" />
+    <ClCompile Include="src\Res.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Font.h" />
+    <ClInclude Include="include\ft2build.h" />
+    <ClInclude Include="include\Mesh.h" />
+    <ClInclude Include="include\Model.h" />
+    <ClInclude Include="include\PointLight.h" />
+    <ClInclude Include="include\Res.h" />
+    <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\stb_image.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\Models\baize\BaiZe01_Body01_D.tga" />
+    <Image Include="Resource\Models\baize\BaiZe01_Body01_S.tga" />
+    <Image Include="Resource\Models\baize\BaiZe01_Hair01_D.tga" />
+    <Image Include="Resource\Models\baize\BaiZe01_Hair01_S.tga" />
+    <Image Include="Resource\Models\planet\planet_Quom1200.png" />
     <Image Include="Resource\Models\zhenji\zhenji256.png" />
     <Image Include="Resource\Skyboxes\1\back.jpg" />
     <Image Include="Resource\Skyboxes\1\bottom.jpg" />
@@ -160,20 +201,29 @@
     <Image Include="Resource\Skyboxes\1\right.jpg" />
     <Image Include="Resource\Skyboxes\1\top.jpg" />
     <Image Include="Resource\Textures\blending_transparent_window.png" />
+    <Image Include="Resource\Textures\container.jpg" />
+    <Image Include="Resource\Textures\container2.png" />
     <Image Include="Resource\Textures\container2_specular.png" />
     <Image Include="Resource\Textures\grass.png" />
+    <Image Include="Resource\Textures\headicon.png" />
     <Image Include="Resource\Textures\marble.jpg" />
     <Image Include="Resource\Textures\metal.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Instance.fs" />
-    <None Include="Instance.vs" />
     <None Include="Resource\Fonts\msyh.ttc" />
+    <None Include="Resource\Models\baize\BaiZe01_Body01_D.tga.meta" />
+    <None Include="Resource\Models\baize\BaiZe01_Body01_S.tga.meta" />
+    <None Include="Resource\Models\baize\BaiZe01_Hair01_D.tga.meta" />
+    <None Include="Resource\Models\baize\BaiZe01_Hair01_S.tga.meta" />
+    <None Include="Resource\Models\baize\HER0002_BaiZe01_H.FBX" />
+    <None Include="Resource\Models\planet\planet.mtl" />
     <None Include="Resource\Models\zhenji\ZhenJi.xyz" />
     <None Include="Resource\Shaders\Depth.fs" />
     <None Include="Resource\Shaders\Depth.vs" />
     <None Include="Resource\Shaders\Font.fs" />
     <None Include="Resource\Shaders\Font.vs" />
+    <None Include="Resource\Shaders\Instance.fs" />
+    <None Include="Resource\Shaders\Instance.vs" />
     <None Include="Resource\Shaders\LampShader.fs" />
     <None Include="Resource\Shaders\LampShader.vs" />
     <None Include="Resource\Shaders\Light.fs" />
@@ -188,34 +238,6 @@
     <None Include="Resource\Shaders\SingleColor.vs" />
     <None Include="Resource\Shaders\SkyBox.fs" />
     <None Include="Resource\Shaders\SkyBox.vs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="glad.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Font.cpp" />
-    <ClCompile Include="src\HRender.cpp" />
-    <ClCompile Include="src\Mesh.cpp" />
-    <ClCompile Include="src\Model.cpp" />
-    <ClCompile Include="src\PointLight.cpp" />
-    <ClCompile Include="src\Res.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\Font.h" />
-    <ClInclude Include="include\Mesh.h" />
-    <ClInclude Include="include\Model.h" />
-    <ClInclude Include="include\PointLight.h" />
-    <ClInclude Include="include\Res.h" />
-    <ClInclude Include="include\Shader.h" />
-    <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="include\stdafx.h" />
-    <ClInclude Include="include\targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,6 +21,6 @@ public:
 	~PointLight();
 	
 	void Prepare(Shader* shader, int index);
-	PointLight* PointLight::operator=(PointLight* p);
+	PointLight* operator=(PointLight* p);
 };
 #endif

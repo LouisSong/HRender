@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include<glm.hpp>
+#include<glm\glm.hpp>
 
 enum Camera_Movement {
 	FORWARD,
@@ -37,12 +37,12 @@ public:
 
 	float fov = 45.0f;
 
-	Camera::Camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
+	Camera(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
 	
-	void Camera::UpdateViewMatrix();
-	void Camera::Zoom(float yoffset);
-	void Camera::Move(Camera_Movement direction, float deltaTime);
-	void Camera::MouseMove(double xoffset, double yoffset, bool constrainPitch = true);
+	void UpdateViewMatrix();
+	void Zoom(float yoffset);
+	void Move(Camera_Movement direction, float deltaTime);
+	void MouseMove(double xoffset, double yoffset, bool constrainPitch = true);
 
 	float GetHorizontalDistance();
 	float GetVerticalDistance();

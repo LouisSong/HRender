@@ -1,6 +1,5 @@
-#include "stdafx.h"
 #include "Camera.h"
-#include<gtc\matrix_transform.hpp>
+#include<glm\gtc\matrix_transform.hpp>
 #include <iostream>
 
 Camera::Camera(glm::vec3 pos,glm::vec3 target, glm::vec3 up)

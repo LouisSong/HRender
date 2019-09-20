@@ -14,134 +14,38 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Resource Files\Textures">
-      <UniqueIdentifier>{2fd0c510-1b38-4c50-8178-d88c1c7a3935}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{e3dcfede-5a68-4876-b57d-63355bbcac2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Models">
-      <UniqueIdentifier>{5afedc59-65d9-4e4a-91b4-17a893de5789}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Models\zhenji">
-      <UniqueIdentifier>{f67738f0-b21e-4db1-8e87-f8bc5bd31e4e}</UniqueIdentifier>
+      <UniqueIdentifier>{1a44d908-2f13-4978-8e11-aded0ad9ec90}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Skyboxes">
-      <UniqueIdentifier>{3a88086c-bfe0-42fc-8f16-5d505d43e038}</UniqueIdentifier>
+      <UniqueIdentifier>{7ba875b6-8686-4040-bd76-f6375a867e4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Skyboxes\1">
-      <UniqueIdentifier>{19e56f4a-c1f9-4222-93c6-9debf07fb759}</UniqueIdentifier>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{80aa31ce-9221-4f99-a077-3b80d22278c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{b60674e0-b008-4fe3-a3c8-a5ce97a5c589}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Fonts">
-      <UniqueIdentifier>{1ff21b40-300f-4c4e-91b3-76c3119b10cf}</UniqueIdentifier>
+      <UniqueIdentifier>{a267e536-f1a6-4010-a732-ec3fefe8e071}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resource\Textures\marble.jpg">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="Resource\Textures\metal.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="Resource\Models\zhenji\zhenji256.png">
-      <Filter>Resource Files\Models\zhenji</Filter>
-    </Image>
-    <Image Include="Resource\Textures\container2_specular.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="Resource\Textures\grass.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="Resource\Textures\blending_transparent_window.png">
-      <Filter>Resource Files\Textures</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\back.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\bottom.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\front.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\left.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\right.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-    <Image Include="Resource\Skyboxes\1\top.jpg">
-      <Filter>Resource Files\Skyboxes\1</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resource\Shaders\Depth.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Depth.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\LampShader.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\LampShader.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Light.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Light.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\simple.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\simple.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\SingleColor.fs" />
-    <None Include="Resource\Shaders\SingleColor.vs" />
-    <None Include="Resource\Models\zhenji\ZhenJi.xyz">
-      <Filter>Resource Files\Models\zhenji</Filter>
-    </None>
-    <None Include="Resource\Shaders\Screen.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Screen.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\SkyBox.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\SkyBox.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Reflection.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Reflection.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Instance.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Instance.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Fonts\msyh.ttc">
-      <Filter>Resource Files\Fonts</Filter>
-    </None>
-    <None Include="Resource\Shaders\Font.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="Resource\Shaders\Font.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <Filter Include="Resource Files\Skyboxes\1">
+      <UniqueIdentifier>{98b7a204-d5a7-4c4f-9ca7-f54612d63649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\baize">
+      <UniqueIdentifier>{dbddcc89-077f-477b-b9a7-f14acc6f51e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\planet">
+      <UniqueIdentifier>{caec84fc-e82c-4e5a-b23e-7f092a2467fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\zhenji">
+      <UniqueIdentifier>{4040f9ac-85dc-4ace-8953-bc296212bbd6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\HRender.cpp">
@@ -165,10 +69,7 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font.cpp">
+    <ClCompile Include="src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,5 +104,156 @@
     <ClInclude Include="include\Font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ft2build.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\Textures\blending_transparent_window.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\container.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\container2.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\container2_specular.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\grass.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\headicon.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\marble.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Textures\metal.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\back.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\bottom.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\front.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\left.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\right.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Skyboxes\1\top.jpg">
+      <Filter>Resource Files\Skyboxes\1</Filter>
+    </Image>
+    <Image Include="Resource\Models\baize\BaiZe01_Body01_D.tga">
+      <Filter>Resource Files\Models\baize</Filter>
+    </Image>
+    <Image Include="Resource\Models\baize\BaiZe01_Body01_S.tga">
+      <Filter>Resource Files\Models\baize</Filter>
+    </Image>
+    <Image Include="Resource\Models\baize\BaiZe01_Hair01_D.tga">
+      <Filter>Resource Files\Models\baize</Filter>
+    </Image>
+    <Image Include="Resource\Models\baize\BaiZe01_Hair01_S.tga">
+      <Filter>Resource Files\Models\baize</Filter>
+    </Image>
+    <Image Include="Resource\Models\planet\planet_Quom1200.png">
+      <Filter>Resource Files\Models\planet</Filter>
+    </Image>
+    <Image Include="Resource\Models\zhenji\zhenji256.png">
+      <Filter>Resource Files\Models\zhenji</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Fonts\msyh.ttc">
+      <Filter>Resource Files\Fonts</Filter>
+    </None>
+    <None Include="Resource\Shaders\Depth.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Depth.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Font.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Font.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Instance.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Instance.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\LampShader.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\LampShader.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Light.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Light.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Reflection.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Reflection.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Screen.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\Screen.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\simple.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\simple.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SingleColor.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SingleColor.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SkyBox.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Shaders\SkyBox.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Resource\Models\baize\BaiZe01_Body01_D.tga.meta">
+      <Filter>Resource Files\Models\baize</Filter>
+    </None>
+    <None Include="Resource\Models\baize\BaiZe01_Body01_S.tga.meta">
+      <Filter>Resource Files\Models\baize</Filter>
+    </None>
+    <None Include="Resource\Models\baize\BaiZe01_Hair01_D.tga.meta">
+      <Filter>Resource Files\Models\baize</Filter>
+    </None>
+    <None Include="Resource\Models\baize\BaiZe01_Hair01_S.tga.meta">
+      <Filter>Resource Files\Models\baize</Filter>
+    </None>
+    <None Include="Resource\Models\baize\HER0002_BaiZe01_H.FBX">
+      <Filter>Resource Files\Models\baize</Filter>
+    </None>
+    <None Include="Resource\Models\planet\planet.mtl">
+      <Filter>Resource Files\Models\planet</Filter>
+    </None>
+    <None Include="Resource\Models\zhenji\ZhenJi.xyz">
+      <Filter>Resource Files\Models\zhenji</Filter>
+    </None>
   </ItemGroup>
 </Project>
